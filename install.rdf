@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>github-wc-polyfill@Off.JustOff</em:id>
+    <em:version>1.0.1</em:version>
+    <em:type>2</em:type>
+    <em:bootstrap>true</em:bootstrap>
+    <em:name>GitHub Web Components Polyfill</em:name>
+    <em:description>Provides Web Components Polyfill for GitHub</em:description>
+    <em:creator>Off JustOff &lt;Off.Just.Off@gmail.com&gt;</em:creator>
+    <em:contributor>The Polymer Authors https://github.com/webcomponents/polyfills</em:contributor>
+    <em:homepageURL>https://github.com/JustOff/github-wc-polyfill/</em:homepageURL>
+    <em:updateURL>https://raw.githubusercontent.com/JustOff/github-wc-polyfill/master/update.xml</em:updateURL>
+    <em:targetApplication>
+      <Description>
+      <em:id>{8de7fcbb-c55c-4fbe-bfc5-fc555c87dbc4}</em:id>
+      <em:minVersion>28.14.0</em:minVersion>
+      <em:maxVersion>29.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
