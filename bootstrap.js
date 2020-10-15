@@ -12,7 +12,8 @@ const sha256 = "'sha256-Xwzkrrrq3g7zsld2XFc1phJHOgfQ7VYchGSf92NeEZg='";
 var httpResponseObserver = {
   observe: function (subject, topic, data) {
     if ((topic == "http-on-examine-response" || topic == "http-on-examine-cached-response") &&
-        subject instanceof Ci.nsIHttpChannel && subject.URI.host == "github.com" && subject.responseStatus == 200) {
+        subject instanceof Ci.nsIHttpChannel && subject.URI.host == "github.com" &&
+        (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
         let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
         if (ctype.indexOf("text/html") == -1 && ctype.indexOf("text/javascrip") == -1) {
