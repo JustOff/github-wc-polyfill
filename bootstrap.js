@@ -33,11 +33,11 @@ var httpResponseObserver = {
 
 var deiObserver = {
   observe: function(subject, topic, data) {
-    if (topic == "document-element-inserted" && subject instanceof Ci.nsIDOMDocument
-        && subject.defaultView && subject.defaultView == subject.defaultView.top
-        && subject.location.protocol == "https:"
-        && subject.location.hostname == "github.com"
-        && subject.contentType == "text/html") {
+    if (topic == "document-element-inserted" && subject instanceof Ci.nsIDOMDocument &&
+        subject.defaultView && subject.defaultView == subject.defaultView.top &&
+        subject.location.protocol == "https:" &&
+        subject.location.hostname == "github.com" &&
+        subject.contentType == "text/html") {
       let script = subject.createElement("script");
       script.textContent = subject.defaultView.atob(polyfill);
       subject.documentElement.appendChild(script);
