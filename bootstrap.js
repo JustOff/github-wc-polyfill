@@ -42,7 +42,10 @@ var deiObserver = {
         subject.contentType == "text/html") {
       let script = subject.createElement("script");
       script.textContent = polyfill;
-      subject.documentElement.appendChild(script);
+      let heads = subject.documentElement.getElementsByTagName("head");
+      if (heads.length && heads[0].firstElementChild) {
+        heads[0].insertBefore(script, heads[0].firstElementChild);
+      }
     }
   },
   QueryInterface: XPCOMUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference])
