@@ -16,7 +16,7 @@ var httpResponseObserver = {
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
         let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
-        if (ctype.indexOf("text/html") == -1 && ctype.indexOf("text/javascrip") == -1) {
+        if (ctype.indexOf("text/html") == -1 && ctype.indexOf("text/javascript") == -1) {
           return;
         }
       } catch (e) {}
