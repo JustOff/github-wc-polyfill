@@ -1,3 +1,21 @@
+/*
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ GitHub Web Components Polyfill Add-on
+ Copyright (c) 2020 JustOff. All rights reserved.
+
+ Web Components Polyfills 
+ Copyright (c) 2014-2020 The Polymer Project Authors. All rights reserved.
+ This code may only be used under the BSD style license found at
+ http://polymer.github.io/LICENSE.txt The complete set of authors may be found
+ at http://polymer.github.io/AUTHORS.txt The complete set of contributors may
+ be found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by
+ Google as part of the polymer project is also subject to an additional IP
+ rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
 "use strict";
 
 var Ci = Components.interfaces, Cu = Components.utils;
