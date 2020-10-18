@@ -28,6 +28,7 @@ XPCOMUtils.defineLazyGetter(polyfill, "sha256", function() {
     function finishXHR(url) {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url, false);
+        xhr.timeout = 500;
         xhr.send(null);
         return xhr;
     }
