@@ -4,16 +4,16 @@ var fs = require('fs');
 var https = require('https');
 var crypto = require('crypto');
 
-var version = "2.4.4";
-var bundle = "webcomponents-bundle.js";
-var url = "https://unpkg.com/@webcomponents/webcomponentsjs@" + version + "/" + bundle;
+var version = "2.2.10";
+var bundle = "webcomponents-ce.js";
+var url = "https://unpkg.com/@webcomponents/webcomponentsjs@" + version + "/bundles/" + bundle;
 var bootstrap = "bootstrap.js";
 
 var handle = function() {
   var bdata = fs.readFileSync(bundle, "utf8");
   bdata = bdata.replace(/\/\*(\r?\n|\*)[\s\S]+?\*\//g, "");
   bdata = bdata.replace(/(\r?\n)+\/\/[\s\S]+/, "").trim();
-  fs.writeFileSync(bundle.replace("bundle", "include"), bdata);
+  fs.writeFileSync(bundle.replace("ce", "include"), bdata);
   var hash = crypto.createHash("sha256").update(bdata).digest("base64");
   var b64 = Buffer.from(bdata).toString("base64");
   var sdata = fs.readFileSync(bootstrap, "utf8");
