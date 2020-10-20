@@ -1,1 +1,1 @@
-**GitHub Web Components Polyfill** provides a Web Components Polyfill for GitHub using [Web Components Polyfills](https://github.com/webcomponents/polyfills).
+**GitHub Web Components Polyfill** ensures that all GitHub scripts required for UXP are loaded correctly.
