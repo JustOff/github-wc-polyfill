@@ -16,7 +16,8 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 var httpResponseObserver = {
   observe: function (subject, topic, data) {
     if ((topic == "http-on-examine-response" || topic == "http-on-examine-cached-response") &&
-        subject instanceof Ci.nsIHttpChannel && subject.URI.host == "github.com" &&
+        subject instanceof Ci.nsIHttpChannel &&
+        (subject.URI.host == "github.com" || subject.URI.host == "gist.github.com") &&
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
         let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
