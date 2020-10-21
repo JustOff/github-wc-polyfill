@@ -20,19 +20,21 @@ var httpResponseObserver = {
         (subject.URI.host == "github.com" || subject.URI.host == "gist.github.com") &&
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
-        let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
-        if (ctype.indexOf("text/html") == -1 && ctype.indexOf("text/javascript") == -1) {
-          return;
+        if (subject.responseStatus == 200 &&
+            (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
+             subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT)) {
+          let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
+          if (ctype.indexOf("text/html") != -1) {
+            subject.QueryInterface(Ci.nsITraceableChannel);
+            let newListener = new tracingListener();
+            newListener.originalListener = subject.setNewListener(newListener);
+          }
+        } else if (subject.URI.path == "/socket-worker.js") {
+          let csp = subject.getResponseHeader("Content-Security-Policy");
+          csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
+          subject.setResponseHeader("Content-Security-Policy", csp, false);
         }
       } catch (e) {}
-      try {
-        let csp = subject.getResponseHeader("Content-Security-Policy");
-        csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
-        subject.setResponseHeader("Content-Security-Policy", csp, false);
-      } catch (e) {}
-      subject.QueryInterface(Ci.nsITraceableChannel);
-      var newListener = new tracingListener();
-      newListener.originalListener = subject.setNewListener(newListener);
     }
   },
   QueryInterface: XPCOMUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference])
