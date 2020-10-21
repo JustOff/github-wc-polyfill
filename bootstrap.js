@@ -46,9 +46,9 @@ function tracingListener () {
 
 tracingListener.prototype = {
   onDataAvailable: function (request, context, inputStream, offset, count) {
-    var binaryInputStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci["nsIBinaryInputStream"]);
+    let binaryInputStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci["nsIBinaryInputStream"]);
     binaryInputStream.setInputStream(inputStream);
-    var data = binaryInputStream.readBytes(count);
+    let data = binaryInputStream.readBytes(count);
     this.receivedData.push(data);
   },
   onStartRequest: function (request, context) {
@@ -59,14 +59,14 @@ tracingListener.prototype = {
     }
   },
   onStopRequest: function (request, context, statusCode) {
-    var data = this.receivedData.join("");
+    let data = this.receivedData.join("");
     try {
       data = data.replace(/<script crossorigin="anonymous" defer="defer" (.+?compat\.js.+?)data-src=(.+?)\/script>/,
                           "<script crossorigin=\"anonymous\" $1src=$2/script>");
     } catch (e) {}
-    var storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
+    let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
     storageStream.init(8192, data.length, null);
-    var os = storageStream.getOutputStream(0);
+    let os = storageStream.getOutputStream(0);
     if (data.length > 0) {
       os.write(data, data.length);
     }

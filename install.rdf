@@ -9,7 +9,6 @@
     <em:name>GitHub Web Components Polyfill</em:name>
     <em:description>Ensures that all GitHub scripts required for UXP are loaded correctly</em:description>
     <em:creator>Off JustOff &lt;Off.Just.Off@gmail.com&gt;</em:creator>
-    <em:contributor>The Polymer Authors https://github.com/webcomponents/polyfills</em:contributor>
     <em:homepageURL>https://github.com/JustOff/github-wc-polyfill/</em:homepageURL>
     <em:updateURL>https://raw.githubusercontent.com/JustOff/github-wc-polyfill/master/update.xml</em:updateURL>
     <em:targetApplication>
