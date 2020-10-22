@@ -22,6 +22,14 @@
                 <em:updateLink>https://github.com/JustOff/github-wc-polyfill/releases/download/1.1.2/github-wc-polyfill-1.1.2.xpi</em:updateLink>
               </RDF:Description>
             </em:targetApplication>
+            <em:targetApplication>
+              <RDF:Description>
+                <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
+                <em:minVersion>2.53.4</em:minVersion>
+                <em:maxVersion>2.53.*</em:maxVersion>
+                <em:updateLink>https://github.com/JustOff/github-wc-polyfill/releases/download/1.1.2/github-wc-polyfill-1.1.2.xpi</em:updateLink>
+              </RDF:Description>
+            </em:targetApplication>
           </RDF:Description>
         </RDF:li>
       </RDF:Seq>
