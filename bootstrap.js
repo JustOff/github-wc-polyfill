@@ -46,8 +46,7 @@ var httpObserver = {
         if (subject.responseStatus == 200 &&
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
              subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT)) {
-          let ctype = subject.getResponseHeader("Content-Type").toLowerCase();
-          if (ctype.indexOf("text/html") != -1) {
+          if (subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
             if (isSeaMonkey) {
               let csp = subject.getResponseHeader("Content-Security-Policy");
               csp = csp.replace("script-src ", "script-src github.com " + sha256 + " ");
