@@ -176,46 +176,49 @@ var httpObserver = {
   QueryInterface: XPCOMUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference])
 };
 
+function textFromInputStream(inputStream, count) {
+  let scriptableInputStream = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci["nsIScriptableInputStream"]);
+  scriptableInputStream.init(inputStream);
+  return scriptableInputStream.readBytes(count);
+}
+
+function inputStreamFromText(text) {
+  let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
+  storageStream.init(8192, text.length, null);
+  let outputStream = storageStream.getOutputStream(0)
+  outputStream.write(text, text.length);
+  outputStream.close();
+  return storageStream.newInputStream(0);
+}
+
 function tracingListener () {
-  this.receivedData = [];
 }
 
 tracingListener.prototype = {
+  patched: false,
+
   onDataAvailable: function (request, context, inputStream, offset, count) {
-    let binaryInputStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci["nsIBinaryInputStream"]);
-    binaryInputStream.setInputStream(inputStream);
-    let data = binaryInputStream.readBytes(count);
-    this.receivedData.push(data);
+    if (!this.patched) {
+      let data = textFromInputStream(inputStream, count);
+      try {
+        data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
+        data = data.replace("<head>", "<head><script>" + pfQueueMicrotask + "</script>");
+        if (isSeaMonkey) {
+          data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
+        }
+      } catch (e) {}
+      offset = 0;
+      count = data.length;
+      inputStream = inputStreamFromText(data);
+      this.patched = true;
+    }
+    this.originalListener.onDataAvailable(request, context, inputStream, offset, count);
   },
   onStartRequest: function (request, context) {
-    try {
-      this.originalListener.onStartRequest(request, context);
-    } catch (err) {
-      request.cancel(err.result);
-    }
+    this.originalListener.onStartRequest(request, context);
   },
   onStopRequest: function (request, context, statusCode) {
-    let data = this.receivedData.join("");
-    try {
-      data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
-      data = data.replace("<head>", "<head><script>" + pfQueueMicrotask + "</script>");
-      if (isSeaMonkey) {
-        data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
-      }
-    } catch (e) {}
-    let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
-    storageStream.init(8192, data.length, null);
-    let os = storageStream.getOutputStream(0);
-    if (data.length > 0) {
-      os.write(data, data.length);
-    }
-    os.close();
-    try {
-      this.originalListener.onDataAvailable(request, context, storageStream.newInputStream(0), 0, data.length);
-    } catch (e) {}
-    try {
-      this.originalListener.onStopRequest(request, context, statusCode);
-    } catch (e) {}
+    this.originalListener.onStopRequest(request, context, statusCode);
   },
   QueryInterface: XPCOMUtils.generateQI([Ci.nsIStreamListener, Ci.nsISupports])
 }
