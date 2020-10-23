@@ -1,5 +1,5 @@
 @echo off
-set VER=1.1.4
+set VER=1.1.5
 
 sed -i -E "s/version>.+?</version>%VER%</" install.rdf
 sed -i -E "s/version>.+?</version>%VER%</; s/download\/.+?\/github-wc-polyfill-.+?\.xpi/download\/%VER%\/github-wc-polyfill-%VER%\.xpi/" update.xml
