@@ -3,7 +3,17 @@
  License, v. 2.0. If a copy of the MPL was not distributed with this
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+ GitHub Web Components Polyfill Add-on
  Copyright (c) 2020 JustOff. All rights reserved.
+
+ Element.prototype.toggleAttribute and Array.prototype.flat polyfills
+ Copyright (c) 2005-2020 Mozilla and individual contributors.
+ https://developer.mozilla.org/docs/Web/API/Element/toggleAttribute
+ https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+
+ Array.prototype.flatMap polyfill
+ Copyright (c) 2017 Aluan Haddad.
+ https://github.com/aluanhaddad/flat-map
 */
 
 "use strict";
@@ -15,7 +25,8 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
 const isSeaMonkey = Services.appinfo.name == "SeaMonkey";
 
-const pfToggleAttribute = `if (!Element.prototype.toggleAttribute) {
+const pfSeaMonkey = `(function(){
+if (!Element.prototype.toggleAttribute) {
   Element.prototype.toggleAttribute = function(name, force) {
     if(force !== void 0) force = !!force 
     
@@ -30,8 +41,95 @@ const pfToggleAttribute = `if (!Element.prototype.toggleAttribute) {
     this.setAttribute(name, "");
     return true;
   };
-}`;
-const hashToggleAttribute = "'sha256-a1mbTwJSodgsH6xIck4zziyRaF6F6MYFDaWPqucYPeo='";
+}
+function flattenIntoArray(target, source, start, depth, mapperFunction, thisArg) {
+  const mapperFunctionProvied = mapperFunction !== undefined;
+  let targetIndex = start;
+  let sourceIndex = 0;
+  const sourceLen = source.length;
+  while (sourceIndex < sourceLen) {
+    const p = sourceIndex;
+    const exists = !!source[p];
+    if (exists === true) {
+      let element = source[p];
+      if (element) {
+        if (mapperFunctionProvied) {
+          element = mapperFunction.call(thisArg, element, sourceIndex, target);
+        }
+        const spreadable = Object.getOwnPropertySymbols(element).includes(Symbol.isConcatSpreadable) || Array.isArray(element);
+        if (spreadable === true && depth > 0) {
+          const nextIndex = flattenIntoArray(target, element, targetIndex, depth - 1);
+          targetIndex = nextIndex;
+        } else {
+          if (!Number.isSafeInteger(targetIndex)) {
+            throw TypeError();
+          }
+          target[targetIndex] = element;
+        }
+      }
+    }
+    targetIndex += 1;
+    sourceIndex += 1;
+  }
+  return targetIndex;
+}
+function arraySpeciesCreate(originalArray, length) {
+  const isArray = Array.isArray(originalArray);
+  if (!isArray) {
+    return Array(length);
+  }
+  let C = Object.getPrototypeOf(originalArray).constructor;
+  if (C) {
+    if (typeof C === 'object' || typeof C === 'function') {
+      C = C[Symbol.species.toString()];
+      C = C !== null ? C : undefined;
+    }
+    if (C === undefined) {
+      return Array(length);
+    }
+    if (typeof C !== 'function') {
+      throw TypeError('invalid constructor');
+    }
+    const result = new C(length);
+    return result;
+  }
+}
+if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'flatMap')) {
+  Array.prototype.flatMap = function flatMap(callbackFn, thisArg) {
+    const o = Object(this);
+    if (!callbackFn || typeof callbackFn.call !== 'function') {
+      throw TypeError('callbackFn must be callable.');
+    }
+    const t = thisArg !== undefined ? thisArg : undefined;
+    const a = arraySpeciesCreate(o, o.length);
+    flattenIntoArray(a, o, 0, 1, callbackFn, t);
+    return a.filter(x => x !== undefined, a);
+  };
+}
+if (!Array.prototype.flat) {
+  Array.prototype.flat = function() {
+    var depth = arguments[0];
+    depth = depth === undefined ? 1 : Math.floor(depth);
+    if (depth < 1) return Array.prototype.slice.call(this);
+    return (function flat(arr, depth) {
+      var len = arr.length >>> 0;
+      var flattened = [];
+      var i = 0;
+      while (i < len) {
+        if (i in arr) {
+          var el = arr[i];
+          if (Array.isArray(el) && depth > 0)
+            flattened = flattened.concat(flat(el, depth - 1));
+          else flattened.push(el);
+        }
+        i++;
+      }
+      return flattened;
+    })(this, depth);
+  };
+}
+}).call(this);`;
+const hashSeaMonkey = "'sha256-e4RJ1+xAp4xhtpaeSLNr50yP+/R80IwoR3JYjsq58MY='";
 const pfQueueMicrotask = `typeof queueMicrotask !== 'function' && (queueMicrotask = function(f) {setTimeout(f, 0)})`;
 const hashQueueMicrotask = "'sha256-igeL9oZ0EoGLhbsoV8SGLqJ+N2TODXWU9AOUmKvnXLM='";
 
@@ -51,7 +149,7 @@ var httpObserver = {
           let csp = subject.getResponseHeader("Content-Security-Policy");
           csp = csp.replace("script-src ", "script-src " + hashQueueMicrotask + " ");
           if (isSeaMonkey) {
-            csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashToggleAttribute + " ");
+            csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
             csp = csp.replace("default-src 'none'", "default-src github.com/socket-worker.js gist.github.com/socket-worker.js");
           }
           subject.setResponseHeader("Content-Security-Policy", csp, false);
@@ -102,7 +200,7 @@ tracingListener.prototype = {
       data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
       data = data.replace("<head>", "<head><script>" + pfQueueMicrotask + "</script>");
       if (isSeaMonkey) {
-        data = data.replace("<head>", "<head><script>" + pfToggleAttribute + "</script>");
+        data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
       }
     } catch (e) {}
     let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
