@@ -15,7 +15,7 @@ Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
 const isSeaMonkey = Services.appinfo.name == "SeaMonkey";
 
-const polyfill = `if (!Element.prototype.toggleAttribute) {
+const pfToggleAttribute = `if (!Element.prototype.toggleAttribute) {
   Element.prototype.toggleAttribute = function(name, force) {
     if(force !== void 0) force = !!force 
     
@@ -31,8 +31,9 @@ const polyfill = `if (!Element.prototype.toggleAttribute) {
     return true;
   };
 }`;
-
-const sha256 = "'sha256-a1mbTwJSodgsH6xIck4zziyRaF6F6MYFDaWPqucYPeo='";
+const hashToggleAttribute = "'sha256-a1mbTwJSodgsH6xIck4zziyRaF6F6MYFDaWPqucYPeo='";
+const pfQueueMicrotask = `typeof queueMicrotask !== 'function' && (queueMicrotask = function(f) {setTimeout(f, 0)})`;
+const hashQueueMicrotask = "'sha256-igeL9oZ0EoGLhbsoV8SGLqJ+N2TODXWU9AOUmKvnXLM='";
 
 var cookie;
 
@@ -47,12 +48,13 @@ var httpObserver = {
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
              subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT)) {
           if (subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
+            let csp = subject.getResponseHeader("Content-Security-Policy");
+            csp = csp.replace("script-src ", "script-src " + hashQueueMicrotask + " ");
             if (isSeaMonkey) {
-              let csp = subject.getResponseHeader("Content-Security-Policy");
-              csp = csp.replace("script-src ", "script-src github.com " + sha256 + " ");
+              csp = csp.replace("script-src ", "script-src github.com " + hashToggleAttribute + " ");
               csp = csp.replace("default-src 'none'", "default-src github.com/socket-worker.js gist.github.com/socket-worker.js");
-              subject.setResponseHeader("Content-Security-Policy", csp, false);
             }
+            subject.setResponseHeader("Content-Security-Policy", csp, false);
             subject.QueryInterface(Ci.nsITraceableChannel);
             let newListener = new tracingListener();
             newListener.originalListener = subject.setNewListener(newListener);
@@ -99,8 +101,9 @@ tracingListener.prototype = {
     let data = this.receivedData.join("");
     try {
       data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
+      data = data.replace("<head>", "<head><script>" + pfQueueMicrotask + "</script>");
       if (isSeaMonkey) {
-        data = data.replace("<head>", "<head><script>" + polyfill + "</script>");
+        data = data.replace("<head>", "<head><script>" + pfToggleAttribute + "</script>");
       }
     } catch (e) {}
     let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
