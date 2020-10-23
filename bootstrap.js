@@ -98,8 +98,7 @@ tracingListener.prototype = {
   onStopRequest: function (request, context, statusCode) {
     let data = this.receivedData.join("");
     try {
-      data = data.replace(/<script crossorigin="anonymous" defer="defer" (.+?compat\.js.+?)data-src=(.+?)\/script>/,
-                          "<script crossorigin=\"anonymous\" $1src=$2/script>");
+      data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
       if (isSeaMonkey) {
         data = data.replace("<head>", "<head><script>" + polyfill + "</script>");
       }
