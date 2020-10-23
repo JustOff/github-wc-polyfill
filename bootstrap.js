@@ -46,19 +46,18 @@ var httpObserver = {
       try {
         if (subject.responseStatus == 200 &&
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
-             subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT)) {
-          if (subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
-            let csp = subject.getResponseHeader("Content-Security-Policy");
-            csp = csp.replace("script-src ", "script-src " + hashQueueMicrotask + " ");
-            if (isSeaMonkey) {
-              csp = csp.replace("script-src ", "script-src github.com " + hashToggleAttribute + " ");
-              csp = csp.replace("default-src 'none'", "default-src github.com/socket-worker.js gist.github.com/socket-worker.js");
-            }
-            subject.setResponseHeader("Content-Security-Policy", csp, false);
-            subject.QueryInterface(Ci.nsITraceableChannel);
-            let newListener = new tracingListener();
-            newListener.originalListener = subject.setNewListener(newListener);
+             subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT) &&
+            subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
+          let csp = subject.getResponseHeader("Content-Security-Policy");
+          csp = csp.replace("script-src ", "script-src " + hashQueueMicrotask + " ");
+          if (isSeaMonkey) {
+            csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashToggleAttribute + " ");
+            csp = csp.replace("default-src 'none'", "default-src github.com/socket-worker.js gist.github.com/socket-worker.js");
           }
+          subject.setResponseHeader("Content-Security-Policy", csp, false);
+          subject.QueryInterface(Ci.nsITraceableChannel);
+          let newListener = new tracingListener();
+          newListener.originalListener = subject.setNewListener(newListener);
         } else if (subject.URI.path == "/socket-worker.js") {
           let csp = subject.getResponseHeader("Content-Security-Policy");
           csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
