@@ -177,18 +177,17 @@ var httpObserver = {
 };
 
 function textFromInputStream(inputStream, count) {
-  let scriptableInputStream = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci["nsIScriptableInputStream"]);
+  let scriptableInputStream = Cc["@mozilla.org/scriptableinputstream;1"]
+                              .createInstance(Ci.nsIScriptableInputStream);
   scriptableInputStream.init(inputStream);
   return scriptableInputStream.readBytes(count);
 }
 
 function inputStreamFromText(text) {
-  let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
-  storageStream.init(8192, text.length, null);
-  let outputStream = storageStream.getOutputStream(0)
-  outputStream.write(text, text.length);
-  outputStream.close();
-  return storageStream.newInputStream(0);
+  let inputStream = Cc["@mozilla.org/io/string-input-stream;1"]
+                    .createInstance(Ci.nsIStringInputStream);
+  inputStream.setData(text, text.length);
+  return inputStream;
 }
 
 function tracingListener () {
