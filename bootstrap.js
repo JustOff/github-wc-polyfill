@@ -150,13 +150,13 @@ var httpObserver = {
           csp = csp.replace("script-src ", "script-src " + hashQueueMicrotask + " ");
           if (isSeaMonkey) {
             csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
-            csp = csp.replace("default-src 'none'", "default-src github.com/socket-worker.js gist.github.com/socket-worker.js");
+            csp = csp.replace("default-src 'none'", "default-src github.com gist.github.com");
           }
           subject.setResponseHeader("Content-Security-Policy", csp, false);
           subject.QueryInterface(Ci.nsITraceableChannel);
           let newListener = new tracingListener();
           newListener.originalListener = subject.setNewListener(newListener);
-        } else if (subject.URI.path == "/socket-worker.js") {
+        } else if (subject.URI.path.indexOf("/socket-worker-") == 0) {
           let csp = subject.getResponseHeader("Content-Security-Policy");
           csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
           subject.setResponseHeader("Content-Security-Policy", csp, false);
