@@ -2,7 +2,7 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>github-wc-polyfill@Off.JustOff</em:id>
-    <em:version>1.1.8</em:version>
+    <em:version>1.1.9</em:version>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:strictCompatibility>true</em:strictCompatibility>
@@ -30,6 +30,13 @@
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
         <em:minVersion>2.53.4</em:minVersion>
         <em:maxVersion>2.53.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+    <em:targetApplication>
+      <Description>
+        <em:id>{a3210b97-8e8a-4737-9aa0-aa0e607640b9}</em:id>
+        <em:minVersion>0.9.7766a1</em:minVersion>
+        <em:maxVersion>0.9.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
