@@ -6,8 +6,8 @@
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:strictCompatibility>true</em:strictCompatibility>
-    <em:name>GitHub Web Components Polyfill</em:name>
-    <em:description>Ensures that all GitHub scripts required for UXP and SeaMonkey are loaded correctly</em:description>
+    <em:name>GitHub/GitLab Web Components Polyfill</em:name>
+    <em:description>Ensures that all GitHub and GitLab scripts required for UXP and SeaMonkey are loaded correctly</em:description>
     <em:creator>Off JustOff &lt;Off.Just.Off@gmail.com&gt;</em:creator>
     <em:homepageURL>https://github.com/JustOff/github-wc-polyfill/</em:homepageURL>
     <em:updateURL>https://raw.githubusercontent.com/JustOff/github-wc-polyfill/master/update.xml</em:updateURL>
