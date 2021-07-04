@@ -176,33 +176,37 @@ f.push(d.textContent);return f.join("")},set:function(f){for(;this.firstChild;)u
 }).call(self);`;
 const hashCElements = "'sha256-rWWOwtKo7HU91YBF/nwZe2B2qiwVkRbtgbN0jJqfqXs='";
 
+const githost = new RegExp("^(?:gist\.)?github\.com$|^gitlab\.");
+const gitlab = new RegExp("^gitlab\.");
+
 var cookie;
 
 var httpObserver = {
   observe: function (subject, topic, data) {
     if ((topic == "http-on-examine-response" || topic == "http-on-examine-cached-response") &&
-        subject instanceof Ci.nsIHttpChannel &&
-        (subject.URI.host == "github.com" || subject.URI.host == "gist.github.com" || subject.URI.host == "gitlab.com") &&
+        subject instanceof Ci.nsIHttpChannel && githost.test(subject.URI.host) &&
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
         if (subject.responseStatus == 200 &&
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
              subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT) &&
             subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
-          let csp = subject.getResponseHeader("Content-Security-Policy");
-          if (subject.URI.host == "gitlab.com") {
-            csp = csp.replace("script-src ", "script-src " + hashCElements + " ");
-          } else {
-            csp = csp.replace("script-src ", "script-src " + hashBase + " ");
-            if (isSeaMonkey) {
-              csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
-              csp = csp.replace("default-src 'none'", "default-src github.com gist.github.com");
+          try {
+            let csp = subject.getResponseHeader("Content-Security-Policy");
+            if (gitlab.test(subject.URI.host)) {
+              csp = csp.replace("script-src ", "script-src " + hashCElements + " ");
+            } else {
+              csp = csp.replace("script-src ", "script-src " + hashBase + " ");
+              if (isSeaMonkey) {
+                csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
+                csp = csp.replace("default-src 'none'", "default-src github.com gist.github.com");
+              }
             }
-          }
-          subject.setResponseHeader("Content-Security-Policy", csp, false);
+            subject.setResponseHeader("Content-Security-Policy", csp, false);
+          } catch (e) {}
           subject.QueryInterface(Ci.nsITraceableChannel);
           let newListener = new tracingListener();
-          if (subject.URI.host == "gitlab.com") {
+          if (gitlab.test(subject.URI.host)) {
             newListener.site = "gitlab";
           } else {
             newListener.site = "github";
