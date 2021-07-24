@@ -196,12 +196,12 @@ var httpObserver = {
           try {
             let csp = subject.getResponseHeader("Content-Security-Policy");
             if (gitlab.test(subject.URI.host)) {
-              csp = csp.replace("script-src ", "script-src " + hashCElements + " ");
+              csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
             } else {
-              csp = csp.replace("script-src ", "script-src " + hashBase + " ");
+              csp = csp.replace(/script-src /g, "script-src " + hashBase + " ");
               if (isSeaMonkey) {
-                csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
-                csp = csp.replace("default-src 'none'", "default-src github.com gist.github.com");
+                csp = csp.replace(/script-src /g, "script-src github.com gist.github.com " + hashSeaMonkey + " ");
+                csp = csp.replace(/default-src 'none'/g, "default-src github.com gist.github.com");
               }
             }
             subject.setResponseHeader("Content-Security-Policy", csp, false);
@@ -216,7 +216,7 @@ var httpObserver = {
           newListener.originalListener = subject.setNewListener(newListener);
         } else if (subject.URI.path.indexOf("/socket-worker-") == 0) {
           let csp = subject.getResponseHeader("Content-Security-Policy");
-          csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
+          csp = csp.replace(/worker-src /g, "worker-src github.githubassets.com ");
           subject.setResponseHeader("Content-Security-Policy", csp, false);
         }
       } catch (e) {}
