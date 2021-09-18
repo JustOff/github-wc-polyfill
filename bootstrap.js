@@ -180,6 +180,7 @@ const hashCElements = "'sha256-rWWOwtKo7HU91YBF/nwZe2B2qiwVkRbtgbN0jJqfqXs='";
 const glmask = "^gitlab.|^((0xacab|framagit)\.org|code\.(briarproject\.org|foxkit\.us|videolan\.org)|dev\.gajim\.org|forge\.tedomum\.net|git\.(callpipe\.com|cardiff\.ac\.uk|cit\.bcit\.ca|coop|drk\.sc|drupalcode\.org|empiresmod\.com|feneas\.org|fosscommunity\.in|gnu\.io|happy-dev\.fr|immc\.ucl\.ac\.be|jami\.net|ligo\.org|linux-kernel\.at|najer\.info|nzoss\.org\.nz|oeru\.org|pleroma\.social|pwmt\.org|silence\.dev|synz\.io)|gitgud\.io|gitplac\.si|invent\.kde\.org|lab\.libreho\.st|mau\.dev|mpeg\.expert|opencode\.net|repo\.getmonero\.org|salsa\.debian\.org|skylab\.vc\.h-brs\.de|source\.(joinmastodon\.org|puri\.sm|small-tech\.org))$";
 const githost = new RegExp("^(gist\.)?github\.com$|" + glmask);
 const gitlab = new RegExp(glmask);
+const gitlabjs = new RegExp("^/assets/webpack/.+\.chunk\.js$");
 
 var cookie;
 
@@ -213,6 +214,11 @@ var httpObserver = {
           } else {
             newListener.site = "github";
           }
+          newListener.originalListener = subject.setNewListener(newListener);
+        } else if (gitlab.test(subject.URI.host) && gitlabjs.test(subject.URI.path)) {
+          subject.QueryInterface(Ci.nsITraceableChannel);
+          let newListener = new tracingListener();
+          newListener.site = "gitlabjs";
           newListener.originalListener = subject.setNewListener(newListener);
         } else if (subject.URI.path.indexOf("/socket-worker-") == 0) {
           let csp = subject.getResponseHeader("Content-Security-Policy");
@@ -263,6 +269,9 @@ tracingListener.prototype = {
         }
       } else if (this.site == "gitlab") {
         data = data.replace("<script", "<script>" + customElements + "</script><script");
+      } else if (this.site == "gitlabjs") {
+        // https://gitlab.com/gitlab-org/gitlab/-/commit/5522a5ffb6a0522e11dd684cce5c5e99ae6c24ce
+        data = data.replace("(?<iid>", "(").replace(".groups.iid", "[1]");
       }
     } catch (e) {}
     let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
