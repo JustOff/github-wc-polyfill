@@ -181,13 +181,18 @@ const glmask = "^gitlab.|^((0xacab|framagit)\.org|code\.(briarproject\.org|foxki
 const githost = new RegExp("^(gist\.)?github\.com$|" + glmask);
 const gitlab = new RegExp(glmask);
 const gitlabjs = new RegExp("^/assets/webpack/.+\.chunk\.js$");
+// Local Gitlab instances
+const gitlablocal = "/gitlab";
+const gitlablocaljs = new RegExp("^" + gitlablocal + "/assets/webpack/.+\.chunk\.js$");
+const gitlablocalpath = new RegExp("^" + gitlablocal + "/");
 
 var cookie;
 
 var httpObserver = {
   observe: function (subject, topic, data) {
     if ((topic == "http-on-examine-response" || topic == "http-on-examine-cached-response") &&
-        subject instanceof Ci.nsIHttpChannel && githost.test(subject.URI.host) &&
+        subject instanceof Ci.nsIHttpChannel &&
+        (githost.test(subject.URI.host) || gitlablocalpath.test(subject.URI.path)) &&
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
         if (subject.responseStatus == 200 &&
@@ -196,7 +201,7 @@ var httpObserver = {
             subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
           try {
             let csp = subject.getResponseHeader("Content-Security-Policy");
-            if (gitlab.test(subject.URI.host)) {
+            if (gitlab.test(subject.URI.host) || gitlablocalpath.test(subject.URI.path)) {
               csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
             } else {
               csp = csp.replace(/script-src /g, "script-src " + hashBase + " ");
@@ -209,13 +214,13 @@ var httpObserver = {
           } catch (e) {}
           subject.QueryInterface(Ci.nsITraceableChannel);
           let newListener = new tracingListener();
-          if (gitlab.test(subject.URI.host)) {
+          if (gitlab.test(subject.URI.host) || gitlablocalpath.test(subject.URI.path)) {
             newListener.site = "gitlab";
           } else {
             newListener.site = "github";
           }
           newListener.originalListener = subject.setNewListener(newListener);
-        } else if (gitlab.test(subject.URI.host) && gitlabjs.test(subject.URI.path)) {
+        } else if ((gitlab.test(subject.URI.host) && gitlabjs.test(subject.URI.path)) || gitlablocaljs.test(subject.URI.path)) {
           subject.QueryInterface(Ci.nsITraceableChannel);
           let newListener = new tracingListener();
           newListener.site = "gitlabjs";
