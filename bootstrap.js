@@ -220,7 +220,7 @@ var httpObserver = {
           let newListener = new tracingListener();
           newListener.site = "gitlabjs";
           newListener.originalListener = subject.setNewListener(newListener);
-        } else if (subject.URI.path.indexOf("/socket-worker-") == 0) {
+        } else if (subject.URI.path.indexOf("/socket-worker-") != -1) {
           let csp = subject.getResponseHeader("Content-Security-Policy");
           csp = csp.replace(/worker-src /g, "worker-src github.githubassets.com ");
           subject.setResponseHeader("Content-Security-Policy", csp, false);
