@@ -177,7 +177,7 @@ f.push(d.textContent);return f.join("")},set:function(f){for(;this.firstChild;)u
 const hashCElements = "'sha256-rWWOwtKo7HU91YBF/nwZe2B2qiwVkRbtgbN0jJqfqXs='";
 
 // Known GitLab instances based on https://gitlab.com/vednoc/dark-gitlab/-/blob/master/gitlab.user.css
-const glmask = "^gitlab.|^((0xacab|framagit)\.org|code\.(briarproject\.org|foxkit\.us|videolan\.org)|dev\.gajim\.org|forge\.tedomum\.net|git\.(callpipe\.com|cardiff\.ac\.uk|cit\.bcit\.ca|coop|drk\.sc|drupalcode\.org|empiresmod\.com|feneas\.org|fosscommunity\.in|gnu\.io|happy-dev\.fr|immc\.ucl\.ac\.be|jami\.net|ligo\.org|linux-kernel\.at|najer\.info|nzoss\.org\.nz|oeru\.org|pleroma\.social|pwmt\.org|silence\.dev|synz\.io)|gitgud\.io|gitplac\.si|invent\.kde\.org|lab\.libreho\.st|mau\.dev|mpeg\.expert|opencode\.net|repo\.getmonero\.org|salsa\.debian\.org|skylab\.vc\.h-brs\.de|source\.(joinmastodon\.org|puri\.sm|small-tech\.org))$";
+const glmask = "^gitlab.|^((0xacab|framagit)\.org|code\.(briarproject\.org|foxkit\.us|videolan\.org)|dev\.gajim\.org|forge\.tedomum\.net|git\.(alchemyviewer\.org|callpipe\.com|cardiff\.ac\.uk|cit\.bcit\.ca|coop|drk\.sc|drupalcode\.org|empiresmod\.com|feneas\.org|fosscommunity\.in|gnu\.io|happy-dev\.fr|immc\.ucl\.ac\.be|jami\.net|ligo\.org|linux-kernel\.at|najer\.info|nzoss\.org\.nz|oeru\.org|pleroma\.social|pwmt\.org|rockylinux\.org|silence\.dev|synz\.io)|gitgud\.io|gitplac\.si|invent\.kde\.org|lab\.libreho\.st|mau\.dev|mpeg\.expert|opencode\.net|repo\.getmonero\.org|salsa\.debian\.org|skylab\.vc\.h-brs\.de|source\.(joinmastodon\.org|puri\.sm|small-tech\.org))$";
 const githost = new RegExp("^(gist\.)?github\.com$|" + glmask);
 const gitlab = new RegExp(glmask);
 const gitlabjs = new RegExp("^/assets/webpack/.+\.chunk\.js$");
