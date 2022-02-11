@@ -263,6 +263,7 @@ tracingListener.prototype = {
     try {
       if (this.site == "github") {
         data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
+        data = data.replace(/<script.+environment-[a-z0-9]+\.js"><\/script>/, "<script crossorigin=\"anonymous\" integrity=\"sha512-hCD+yuHX6Po0snD3NcNEqdv4OBBgSdprm+w6CWjfRf/9iXhbuq+6POgT1cqLuNsrBzO5ZIvbOP/X+NTA2HoxJA==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/environment-8420feca.js\"></script>");
         data = data.replace("<head>", "<head><script>" + pfBase + "</script>");
         if (isSeaMonkey) {
           data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
