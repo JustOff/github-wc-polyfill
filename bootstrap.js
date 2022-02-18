@@ -201,7 +201,9 @@ var httpObserver = {
           try {
             let csp = subject.getResponseHeader("Content-Security-Policy");
             if (gitlab.test(subject.URI.host)) {
-              csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
+              if (subject.URI.host != "0xacab.org") {
+                csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
+              }
             } else {
               csp = csp.replace(/script-src /g, "script-src " + hashBase + " ");
               if (isSeaMonkey) {
