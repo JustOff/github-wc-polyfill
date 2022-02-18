@@ -5,6 +5,7 @@ var doms = [
   'code.videolan.org',
   'dev.gajim.org',
   'forge.tedomum.net',
+  'foss.heptapod.net',
   'framagit.org',
   'git.alchemyviewer.org',
   'git.callpipe.com',
