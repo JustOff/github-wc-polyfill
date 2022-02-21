@@ -179,6 +179,22 @@ c instanceof Element&&J(c),d=u.call(this,c);f&&U(a,c);return d};Node.prototype.r
 f.push(d.textContent);return f.join("")},set:function(f){for(;this.firstChild;)u.call(this,this.firstChild);null!=f&&""!==f&&r.call(this,document.createTextNode(f))}})})};var O=window.customElements;function Ha(){var a=new N;Fa(a);Ba(a);Z(a,DocumentFragment.prototype,{prepend:da,append:ea});Ga(a);Da(a);a=new Y(a);document.__CE_registry=a;Object.defineProperty(window,"customElements",{configurable:!0,enumerable:!0,value:a})}O&&!O.forcePolyfill&&"function"==typeof O.define&&"function"==typeof O.get||Ha();window.__CE_installPolyfill=Ha;
 }).call(self);`;
 const hashCElements = "'sha256-rWWOwtKo7HU91YBF/nwZe2B2qiwVkRbtgbN0jJqfqXs='";
+const patchGithub = `(function(){
+  const old = customElements.define;
+  customElements.define = function(name, cls, options){
+    if (name === 'include-fragment') {
+      cls.prototype.attachShadow = function(){
+        return document.createDocumentFragment();
+      };
+    }
+    return old.call(customElements, name, cls, options);
+  };
+  const css = document.createElement('style');
+  css.innerHTML = 'include-fragment{display:block;}';
+  document.head.appendChild(css);
+  window.ShadowRoot = function(){}
+}).call(self);`;
+const hashPatchGithub = "'sha256-xacOvhQ60RUi63HRCOra3xKhFWV9MCEUnuvPfqR1MvY='";
 
 // Known GitLab instances based on https://gitlab.com/vednoc/dark-gitlab/-/blob/master/gitlab.user.css
 const glmask = "^gitlab.|^((0xacab|framagit)\.org|code\.(briarproject\.org|foxkit\.us|videolan\.org)|dev\.gajim\.org|forge\.tedomum\.net|foss\.heptapod\.net|git\.(alchemyviewer\.org|callpipe\.com|cardiff\.ac\.uk|cit\.bcit\.ca|coop|drk\.sc|drupalcode\.org|empiresmod\.com|feneas\.org|fosscommunity\.in|gnu\.io|happy-dev\.fr|immc\.ucl\.ac\.be|jami\.net|ligo\.org|linux-kernel\.at|najer\.info|nzoss\.org\.nz|oeru\.org|pleroma\.social|pwmt\.org|rockylinux\.org|silence\.dev|synz\.io)|gitgud\.io|gitplac\.si|invent\.kde\.org|lab\.libreho\.st|mau\.dev|mpeg\.expert|opencode\.net|repo\.getmonero\.org|salsa\.debian\.org|skylab\.vc\.h-brs\.de|source\.(joinmastodon\.org|puri\.sm|small-tech\.org))$";
@@ -205,9 +221,9 @@ var httpObserver = {
                 csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
               }
             } else {
-              csp = csp.replace(/script-src /g, "script-src " + hashBase + " ");
+              csp = csp.replace(/script-src /g, "script-src " + hashBase + " " + hashPatchGithub + " ");
               if (isSeaMonkey) {
-                csp = csp.replace(/script-src /g, "script-src github.com gist.github.com " + hashSeaMonkey + " ");
+                csp = csp.replace(/script-src /g, "script-src github.com gist.github.com " + hashSeaMonkey + " " + hashPatchGithub + " ");
                 csp = csp.replace(/default-src 'none'/g, "default-src github.com gist.github.com");
               }
             }
@@ -268,8 +284,8 @@ tracingListener.prototype = {
     let data = this.receivedData.join("");
     try {
       if (this.site == "github") {
+        data = data.replace("<head>", "<head><script>" + patchGithub + "</script>");
         data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
-        data = data.replace(/<script.+chunk-index2-[a-z0-9]+\.js"><\/script>/, "<script crossorigin=\"anonymous\" defer=\"defer\" integrity=\"sha512-o/3J98IT190CWjNtrpkWpVUdnrkKSwQ1jDFOagsCc8ZvvyaqewKygiqxbxF/Z/BzHnrUvLkTe43sQ/D4PAyGRA==\" type=\"application/javascript\" data-module-id=\"./chunk-index2.js\" data-src=\"https://github.githubassets.com/assets/chunk-index2-a3fdc9f7.js\"></script>");
         data = data.replace("<head>", "<head><script>" + pfBase + "</script>");
         if (isSeaMonkey) {
           data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
