@@ -84,4 +84,4 @@ for (var r in res2) {
 }
 
 res1 = res1.concat(tld).sort();
-console.log('const glmask = "^gitlab\.|^(' + res1.join("|").replace(/\./g,"\\.") + ')$";');
+console.log('const glmask = "^gitlab\\\\.|^(' + res1.join("|").replace(/\./g,"\\\\.") + ')$";');
