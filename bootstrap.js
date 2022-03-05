@@ -5,6 +5,7 @@
 
  GitHub Web Components Polyfill Add-on
  Copyright (c) 2020 JustOff. All rights reserved.
+ Copyright (c) 2022 SeaHOH. All rights reserved.
 
  Element.prototype.toggleAttribute and Array.prototype.flat polyfills
  Copyright (c) 2005-2020 Mozilla and individual contributors.
@@ -26,6 +27,10 @@
  Custom Elements polyfill
  Copyright (c) 2020 The Polymer Project Authors. All rights reserved.
  https://github.com/webcomponents/polyfills
+ 
+ Node.prototype.getRootNode polyfill
+ Copyright (c) 2016 Foobar HQ
+ https://github.com/foobarhq/get-root-node-polyfill
 */
 
 "use strict";
@@ -144,6 +149,121 @@ if (!Array.prototype.flat) {
 const hashSeaMonkey = "'sha256-e4RJ1+xAp4xhtpaeSLNr50yP+/R80IwoR3JYjsq58MY='";
 const pfBase = `typeof queueMicrotask !== 'function' && (queueMicrotask = function(f) {setTimeout(f, 0)});(function(){return function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=0)}([function(e,t,r){"use strict";function n(e){return(n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function o(e){return function(e){if(Array.isArray(e)){for(var t=0,r=new Array(e.length);t<e.length;t++)r[t]=e[t];return r}}(e)||function(e){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e))return Array.from(e)}(e)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance")}()}function i(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function u(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function s(e){var t="function"==typeof Map?new Map:void 0;return(s=function(e){if(null===e||(r=e,-1===Function.toString.call(r).indexOf("[native code]")))return e;var r;if("function"!=typeof e)throw new TypeError("Super expression must either be null or a function");if(void 0!==t){if(t.has(e))return t.get(e);t.set(e,n)}function n(){return c(e,arguments,f(this).constructor)}return n.prototype=Object.create(e.prototype,{constructor:{value:n,enumerable:!1,writable:!0,configurable:!0}}),a(n,e)})(e)}function c(e,t,r){return(c=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}()?Reflect.construct:function(e,t,r){var n=[null];n.push.apply(n,t);var o=new(Function.bind.apply(e,n));return r&&a(o,r.prototype),o}).apply(null,arguments)}function a(e,t){return(a=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function f(e){return(f=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}r.r(t);var l=function(e){function t(e){var r,i,s,c,a;return function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,t),i=function(e,t){return!t||"object"!==n(t)&&"function"!=typeof t?u(e):t}(this,(r=f(t)).call.apply(r,[this].concat(o(e)))),s=u(i),a=void 0,(c="_entries")in s?Object.defineProperty(s,c,{value:a,enumerable:!0,configurable:!0,writable:!0}):s[c]=a,i._entries=e,i}var r,s,c;return function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&a(e,t)}(t,e),r=t,(s=[{key:"getEntries",value:function(){return this._entries}},{key:"getEntriesByType",value:function(e){return this._entries.filter((function(t){return t.entryType===e}))}},{key:"getEntriesByName",value:function(e,t){return this._entries.filter((function(t){return t.name===e})).filter((function(e){return!t||e.entryType===t}))}}])&&i(r.prototype,s),c&&i(r,c),t}(s(Array));function y(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function p(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function v(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function b(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}var d=["mark","measure","navigation","resource"],h="Failed to execute 'observe' on 'PerformanceObserver': either an 'entryTypes' or 'type' member must be present.",m="Failed to execute 'observe' on 'PerformanceObserver': either an 'entryTypes' or 'type' member must be present, not both.",g="Aborting 'observe' on 'PerformanceObserver': no valid entry types present in either 'entryTypes' or 'type' member.",O="Invalid or unsupported entry types provided to 'observe' on 'PerformanceObserver'.",w=function(e){return d.some((function(t){return e===t}))},P=new(function(){function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},r=t.registeredObservers,n=void 0===r?new Set:r,o=t.processedEntries,i=void 0===o?new Set:o,u=t.interval,s=void 0===u?100:u,c=t.context,a=void 0===c?self:c;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),p(this,"registeredObservers",void 0),p(this,"processedEntries",void 0),p(this,"interval",void 0),p(this,"intervalId",void 0),p(this,"context",void 0),this.registeredObservers=n,this.processedEntries=i,this.interval=s,this.context=a,this.intervalId=null}var t,r,n;return t=e,(r=[{key:"getNewEntries",value:function(){var e=this;return this.context.performance.getEntries().filter((function(t){return!e.processedEntries.has(t)}))}},{key:"getObserversForType",value:function(e,t){return Array.from(e).filter((function(e){return e.entryTypes.some((function(e){return e===t}))}))}},{key:"processBuffer",value:function(e){var t=Array.from(e.buffer),r=new l(t);e.buffer.clear(),t.length&&e.callback&&e.callback.call(void 0,r,e)}},{key:"processEntries",value:function(){var e=this;this.getNewEntries().forEach((function(t){var r=t.entryType;e.getObserversForType(e.registeredObservers,r).forEach((function(e){e.buffer.add(t)})),e.processedEntries.add(t)}));var t=function(){return e.registeredObservers.forEach(e.processBuffer)};"requestAnimationFrame"in this.context?this.context.requestAnimationFrame(t):this.context.setTimeout(t,0)}},{key:"add",value:function(e){this.registeredObservers.add(e),1===this.registeredObservers.size&&this.observe()}},{key:"remove",value:function(e){this.registeredObservers.delete(e),this.registeredObservers.size||this.disconnect()}},{key:"observe",value:function(){this.intervalId=this.context.setInterval(this.processEntries.bind(this),this.interval)}},{key:"disconnect",value:function(){this.intervalId=this.context.clearInterval(this.intervalId)}}])&&y(t.prototype,r),n&&y(t,n),e}()),k=function(){function e(t){var r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:P;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),b(this,"callback",void 0),b(this,"buffer",void 0),b(this,"entryTypes",[]),b(this,"taskQueue",void 0),this.callback=t,this.buffer=new Set,this.taskQueue=r}var t,r,n;return t=e,(r=[{key:"observe",value:function(e){if(!e)throw new Error(h);if(e.entryTypes&&e.type)throw new Error(m);var t;if(e.entryTypes)t=e.entryTypes;else{if(!e.type)throw new Error(h);t=[e.type]}var r=t.filter(w);r.length>0&&r.length!==t.length&&console.warn(O),r.length?(this.entryTypes=r,this.taskQueue.add(this)):console.warn(g)}},{key:"disconnect",value:function(){this.taskQueue.remove(this)}},{key:"takeRecords",value:function(){var e=Array.from(this.buffer);return new l(e)}}])&&v(t.prototype,r),n&&v(t,n),e}();b(k,"supportedEntryTypes",d);var E="PerformanceObserver"in self&&"function"==typeof PerformanceObserver?PerformanceObserver:k,j=self;j.PerformanceObserver||(j.PerformanceObserver=E)}])}).call(this);(function(){if(Element.prototype.replaceChildren===undefined){Element.prototype.replaceChildren=function(...nodesOrDOMStrings){while(this.lastChild){this.removeChild(this.lastChild)}if(nodesOrDOMStrings.length){this.append(...nodesOrDOMStrings)}}}}());if(!('any' in Promise && typeof Promise.any == 'function'))Promise.any = function($) {return new Promise(function (D, E, A, L) {A = []; L = $.map(function ($, i) {return Promise.resolve($).then(D, function (O) {return ((A[i] = O), --L) || E({errors: A});});}).length;});}`;
 const hashBase = "'sha256-Y97hZdvuJztaJyvPJfwpU8LImTg64KGz8oN2jC/bVMY='";
+const pfFollowUp = `(function () {
+  // Ensure config dom.getRootNode.enabled is "false", or it would not work correctly
+  if (Node.prototype.getRootNode === undefined) {
+    Node.prototype.getRootNode = function getRootNode(opt) {
+      let composed = typeof opt === "object" && Boolean(opt.composed);
+      return composed ? getShadowIncludingRoot(this) : getRoot(this);
+    }
+    function getShadowIncludingRoot(node) {
+      let root = getRoot(node);
+      while (isShadowRoot(root))
+        root = getRoot(root.host);
+      return root;
+    }
+    function getRoot(node) {
+      while (node.parentNode)
+        node = node.parentNode;
+      return node;
+    }
+    function isShadowRoot(node) {
+      return node.nodeName === "#document-fragment" &&
+             node.constructor.name === "ShadowRoot";
+    }
+  }
+  // Remove "disabled" attribute of "Load diff" buttons
+  if (/^\\/.+?\\/.+?\\/(commit\\/|pull\\/\\d+\\/files)/.test(location.pathname))
+    document.addEventListener("DOMContentLoaded", function () {
+      for (let button of document.getElementsByClassName("load-diff-button"))
+        button.removeAttribute("disabled");
+    }, {once: true});
+  if (window.ShadowRoot === undefined) {
+    ShadowRoot = class ShadowRoot extends DocumentFragment {
+      set innerHTML (html) {
+        super.innerHTML = html;
+        let tagName = this.host.localName, hh = c32(tagName);
+        // flag "s" is broken in matchAll
+        for (let [css] of html.matchAll(/<style>[\\s\\S]+?<\\/style>/g)) {
+          for (let [$, selectors, style] of css.matchAll(/(:host[\\s\\S]*?)(\\{[\\s\\S]+?\\})/g)) {
+            let hc = c32($, hh);
+            if (cssHashSet.has(hc)) continue
+            cssHashSet.add(hc);
+            CSS.innerHTML += selectors.replace(
+                /:host(-context)?(?:\\((.+?)\\))?/sg,
+                function ($, context, selectors) {
+                  if (context === undefined && selectors === undefined)
+                    return tagName;
+                  if (context)
+                    return \`:-moz-any(\${selectors}) \${tagName}\`;
+                  let res = [];
+                  for (let selector of selectors.split(","))
+                    res.push(tagName + selector);
+                  return \`:-moz-any(\${res.join(", ")})\`;
+                }) + style;
+          }
+        }
+      }
+    };
+    Element.prototype.attachShadow = function attachShadow(init) {
+      if (this.shadowRoot !== undefined)
+        throw new DOMException(
+            \`The <\${this.tagName}> element has be tried to attach to is already a shadow host.\`,
+            "InvalidStateError");
+      if (!asNames.has(this.localName))
+        throw new DOMException(
+            \`The <\${this.tagName}> element does not supported to attach shadow\`,
+            "NotSupportedError");
+      let sr = new ShadowRoot();
+      Object.defineProperty(sr, "host", {value: this});
+      Object.defineProperty(sr, "mode", {value: init.mode});
+      Object.defineProperty(sr, "delegatesFocus", {value: Boolean(init.delegatesFocus)});
+      Object.defineProperty(this, "shadowRoot", {value: init.mode === "closed" ? null : sr});
+      return sr;
+    };
+    function c32 (str, hash) {
+      hash = hash || 0;
+      for (let c of str) {
+        if (" \\n\\t".includes(c)) continue
+        hash += hash << 8;
+        hash ^= c.codePointAt(0);
+      }
+      return hash;
+    }
+    function addEventListener (type, listener, options) {
+      const target = this, parent = target.parentNode,
+            ael = EventTarget.prototype.addEventListener;
+      ael.call(target, type, listener, options);
+      // Limit applied scope, or break other functions
+      if (!(type === "click" && parent.localName === "button")) return;
+      if (!triggerMap.has(target))
+        triggerMap.set(target, function () {target.dispatchEvent(new Event("click"))});
+      ael.call(parent, type, triggerMap.get(target), options);
+    }
+    function removeEventListener (type, listener, options) {
+      const target = this, parent = target.parentNode,
+            rel = EventTarget.prototype.removeEventListener;
+      rel.call(target, type, listener, options);
+      if (!(type === "click" && parent.localName === "button")) return;
+      rel.call(parent, type, triggerMap.get(target), options);
+    }
+    const CSS = document.createElement("style"),
+          cssHashSet = new Set(),
+          triggerMap = new Map(),
+          oldCED = customElements.define,
+          asNames = new Set(["article", "aside", "blockquote", "body", "div",
+                             "footer", "h1", "h2", "h3", "h4", "h5", "h6",
+                             "header", "main", "nav", "p", "section", "span"]);
+    document.head.appendChild(CSS);
+    customElements.define = function (name, cls) {
+      asNames.add(name);
+      cls.prototype.addEventListener = addEventListener;
+      cls.prototype.removeEventListener = removeEventListener;
+      oldCED.call(customElements, name, cls);
+    };
+  }
+}());`;
+const hashFollowUp = "'sha256-pWY/HAR6cPgUNR2m69Be6xJytwyza46m90rGvv5Wyxk='";
 const customElements = `(function(){var n=window.Document.prototype.createElement,p=window.Document.prototype.createElementNS,aa=window.Document.prototype.importNode,ba=window.Document.prototype.prepend,ca=window.Document.prototype.append,da=window.DocumentFragment.prototype.prepend,ea=window.DocumentFragment.prototype.append,q=window.Node.prototype.cloneNode,r=window.Node.prototype.appendChild,t=window.Node.prototype.insertBefore,u=window.Node.prototype.removeChild,v=window.Node.prototype.replaceChild,w=Object.getOwnPropertyDescriptor(window.Node.prototype,
 "textContent"),y=window.Element.prototype.attachShadow,z=Object.getOwnPropertyDescriptor(window.Element.prototype,"innerHTML"),A=window.Element.prototype.getAttribute,B=window.Element.prototype.setAttribute,C=window.Element.prototype.removeAttribute,D=window.Element.prototype.getAttributeNS,E=window.Element.prototype.setAttributeNS,F=window.Element.prototype.removeAttributeNS,G=window.Element.prototype.insertAdjacentElement,H=window.Element.prototype.insertAdjacentHTML,fa=window.Element.prototype.prepend,
 ha=window.Element.prototype.append,ia=window.Element.prototype.before,ja=window.Element.prototype.after,ka=window.Element.prototype.replaceWith,la=window.Element.prototype.remove,ma=window.HTMLElement,I=Object.getOwnPropertyDescriptor(window.HTMLElement.prototype,"innerHTML"),na=window.HTMLElement.prototype.insertAdjacentElement,oa=window.HTMLElement.prototype.insertAdjacentHTML;var pa=new Set;"annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" ").forEach(function(a){return pa.add(a)});function qa(a){var b=pa.has(a);a=/^[a-z][.0-9_a-z]*-[-.0-9_a-z]*$/.test(a);return!b&&a}var ra=document.contains?document.contains.bind(document):document.documentElement.contains.bind(document.documentElement);
@@ -205,7 +325,7 @@ var httpObserver = {
                 csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
               }
             } else {
-              csp = csp.replace(/script-src /g, "script-src " + hashBase + " ");
+              csp = csp.replace(/script-src /g, "script-src " + hashBase + " " + hashFollowUp + " ");
               if (isSeaMonkey) {
                 csp = csp.replace(/script-src /g, "script-src github.com gist.github.com " + hashSeaMonkey + " ");
                 csp = csp.replace(/default-src 'none'/g, "default-src github.com gist.github.com");
@@ -268,6 +388,7 @@ tracingListener.prototype = {
     let data = this.receivedData.join("");
     try {
       if (this.site == "github") {
+        data = data.replace("<head>", "<head><script>" + pfFollowUp + "</script>");
         data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
         data = data.replace(/<script.+chunk-index2-[a-z0-9]+\.js"><\/script>/, "<script crossorigin=\"anonymous\" defer=\"defer\" integrity=\"sha512-o/3J98IT190CWjNtrpkWpVUdnrkKSwQ1jDFOagsCc8ZvvyaqewKygiqxbxF/Z/BzHnrUvLkTe43sQ/D4PAyGRA==\" type=\"application/javascript\" data-module-id=\"./chunk-index2.js\" data-src=\"https://github.githubassets.com/assets/chunk-index2-a3fdc9f7.js\"></script>");
         data = data.replace("<head>", "<head><script>" + pfBase + "</script>");
@@ -278,11 +399,12 @@ tracingListener.prototype = {
         data = data.replace("<script", "<script>" + customElements + "</script><script");
       } else if (this.site == "gitlabjs") {
         // https://gitlab.com/gitlab-org/gitlab/-/commit/5522a5ffb6a0522e11dd684cce5c5e99ae6c24ce
-        data = data.replace("(?<iid>", "(").replace(".groups.iid", "[1]");
+        data = data.replace("/^&(?<iid>\\d+)$/", "/^&(\\d+)$/").replace(".groups.iid", "[1]");
         // https://gitlab.com/gitlab-org/gitlab-ui/-/commit/d23c341bb8cef5683bf2d49556dabe4008be76cf
-        data = data.replace("\\p{Emoji}", "[\\u{1f300}-\\u{1f5ff}\\u{1f900}-\\u{1f9ff}\\u{1f600}-\\u{1f64f}\\u{1f680}-\\u{1f6ff}\\u{2600}-\\u{26ff}\\u{2700}-\\u{27bf}\\u{1f1e6}-\\u{1f1ff}\\u{1f191}-\\u{1f251}\\u{1f004}\\u{1f0cf}\\u{1f170}-\\u{1f171}\\u{1f17e}-\\u{1f17f}\\u{1f18e}\\u{3030}\\u{2b50}\\u{2b55}\\u{2934}-\\u{2935}\\u{2b05}-\\u{2b07}\\u{2b1b}-\\u{2b1c}\\u{3297}\\u{3299}\\u{303d}\\u{00a9}\\u{00ae}\\u{2122}\\u{23f3}\\u{24c2}\\u{23e9}-\\u{23ef}\\u{25b6}\\u{23f8}-\\u{23fa}]");
+        // Test URL: https://gitlab.com/ykweyer-test-group/emoji-test
+        //data = data.replace("\\p{Emoji}", "[\\u{1f300}-\\u{1f5ff}\\u{1f900}-\\u{1f9ff}\\u{1f600}-\\u{1f64f}\\u{1f680}-\\u{1f6ff}\\u{2600}-\\u{26ff}\\u{2700}-\\u{27bf}\\u{1f1e6}-\\u{1f1ff}\\u{1f191}-\\u{1f251}\\u{1f004}\\u{1f0cf}\\u{1f170}-\\u{1f171}\\u{1f17e}-\\u{1f17f}\\u{1f18e}\\u{3030}\\u{2b50}\\u{2b55}\\u{2934}-\\u{2935}\\u{2b05}-\\u{2b07}\\u{2b1b}-\\u{2b1c}\\u{3297}\\u{3299}\\u{303d}\\u{00a9}\\u{00ae}\\u{2122}\\u{23f3}\\u{24c2}\\u{23e9}-\\u{23ef}\\u{25b6}\\u{23f8}-\\u{23fa}]");
         // https://gitlab.com/gitlab-org/gitlab/-/merge_requests/79161
-        data = data.replace(/\(\?<(indent|leader|isOl|isUl|content)>/g,"(<$1>").replace(/(const{indent:.,content:.,leader:.}=)o.groups;/,"$1{};");
+        data = data.replace("/^(?<indent>\\s*)(?<leader>((?<isOl>[*+-])|(?<isUl>\\d+\\.))( \\[([x ])\\])?\\s)(?<content>.)?/", "/^(\\s*)(([*+-]|\\d+\\.)( \\[[x ]\\])?\\s)(.)?/").replace(/\{indent:(.),content:(.),leader:(.)\}=(.)\.groups;/, "[$1,$2,$3]=[$4[1],$4[5],$4[2]];");
       }
     } catch (e) {}
     let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
