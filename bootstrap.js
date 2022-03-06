@@ -319,7 +319,7 @@ const hashCElements = "'sha256-rWWOwtKo7HU91YBF/nwZe2B2qiwVkRbtgbN0jJqfqXs='";
 
 // Known GitLab instances based on https://gitlab.com/vednoc/dark-gitlab/-/blob/master/gitlab.user.css
 const glmask = "^gitlab\\.|^((0xacab|framagit)\\.org|code\\.(briarproject\\.org|foxkit\\.us|videolan\\.org)|dev\\.gajim\\.org|forge\\.tedomum\\.net|foss\\.heptapod\\.net|git\\.(alchemyviewer\\.org|callpipe\\.com|cardiff\\.ac\\.uk|cit\\.bcit\\.ca|coop|drk\\.sc|drupalcode\\.org|empiresmod\\.com|feneas\\.org|fosscommunity\\.in|gnu\\.io|happy-dev\\.fr|immc\\.ucl\\.ac\\.be|jami\\.net|ligo\\.org|linux-kernel\\.at|najer\\.info|nzoss\\.org\\.nz|oeru\\.org|pleroma\\.social|pwmt\\.org|rockylinux\\.org|silence\\.dev|synz\\.io)|gitgud\\.io|gitplac\\.si|invent\\.kde\\.org|lab\\.libreho\\.st|mau\\.dev|mpeg\\.expert|opencode\\.net|repo\\.getmonero\\.org|salsa\\.debian\\.org|skylab\\.vc\\.h-brs\\.de|source\\.(joinmastodon\\.org|puri\\.sm|small-tech\\.org))$";
-const githost = new RegExp("^(gist\\.)?github\\.(githubassets\\.)?com$|" + glmask);
+const githost = new RegExp("^(gist\\.)?github\\.com$|^camo\\.githubusercontent\\.com$|" + glmask);
 const gitlab = new RegExp(glmask);
 const gitlabjs = new RegExp("^/assets/webpack/.+\\.chunk\\.js$");
 
@@ -331,7 +331,13 @@ var httpObserver = {
         subject instanceof Ci.nsIHttpChannel && githost.test(subject.URI.host) &&
         (subject.responseStatus == 200 || subject.responseStatus == 304)) {
       try {
-        if (subject.responseStatus == 200 &&
+        if (subject.URI.host === "camo.githubusercontent.com") {
+          if (subject.getResponseHeader("Content-Type").indexOf("image/svg") != -1) {
+            let csp = subject.getResponseHeader("Content-Security-Policy");
+            csp += " 'self'; style-src 'unsafe-inline'";
+            subject.setResponseHeader("Content-Security-Policy", csp, false);
+          }
+        } else if (subject.responseStatus == 200 &&
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
              subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT) &&
             subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
@@ -339,13 +345,13 @@ var httpObserver = {
             let csp = subject.getResponseHeader("Content-Security-Policy");
             if (gitlab.test(subject.URI.host)) {
               if (subject.URI.host != "0xacab.org") {
-                csp = csp.replace(/script-src /g, "script-src " + hashCElements + " ");
+                csp = csp.replace("script-src ", "script-src " + hashCElements + " ");
               }
             } else {
-              csp = csp.replace(/script-src /g, "script-src " + hashBase + " " + hashFollowUp + " ");
+              csp = csp.replace("script-src ", "script-src " + hashBase + " " + hashFollowUp + " ");
               if (isSeaMonkey) {
-                csp = csp.replace(/script-src /g, "script-src github.com gist.github.com " + hashSeaMonkey + " ");
-                csp = csp.replace(/default-src 'none'/g, "default-src github.com gist.github.com");
+                csp = csp.replace("script-src ", "script-src github.com gist.github.com " + hashSeaMonkey + " ");
+                csp = csp.replace("default-src 'none'", "default-src github.com gist.github.com");
               }
             }
             subject.setResponseHeader("Content-Security-Policy", csp, false);
@@ -365,7 +371,7 @@ var httpObserver = {
           newListener.originalListener = subject.setNewListener(newListener);
         } else if (subject.URI.path.indexOf("/socket-worker-") != -1) {
           let csp = subject.getResponseHeader("Content-Security-Policy");
-          csp = csp.replace(/worker-src /g, "worker-src github.githubassets.com ");
+          csp = csp.replace("worker-src ", "worker-src github.githubassets.com ");
           subject.setResponseHeader("Content-Security-Policy", csp, false);
         }
       } catch (e) {}
@@ -407,7 +413,6 @@ tracingListener.prototype = {
       if (this.site == "github") {
         data = data.replace("<head>", "<head><script>" + pfFollowUp + "</script>");
         data = data.replace("<head>", "<head><script crossorigin=\"anonymous\" integrity=\"sha512-g4ztuyuFPzjTvIqYBeZdHEDaHz2K6RCz4RszsnL3m5ko4kiWCjB9W6uIScLkNr8l/BtC2dYiIFkOdOLDYBHLqQ==\" type=\"application/javascript\" src=\"https://github.githubassets.com/assets/compat-838cedbb.js\"></script>");
-        data = data.replace(/<script.+chunk-index2-[a-z0-9]+\.js"><\/script>/, "<script crossorigin=\"anonymous\" defer=\"defer\" integrity=\"sha512-o/3J98IT190CWjNtrpkWpVUdnrkKSwQ1jDFOagsCc8ZvvyaqewKygiqxbxF/Z/BzHnrUvLkTe43sQ/D4PAyGRA==\" type=\"application/javascript\" data-module-id=\"./chunk-index2.js\" data-src=\"https://github.githubassets.com/assets/chunk-index2-a3fdc9f7.js\"></script>");
         data = data.replace("<head>", "<head><script>" + pfBase + "</script>");
         if (isSeaMonkey) {
           data = data.replace("<head>", "<head><script>" + pfSeaMonkey + "</script>");
