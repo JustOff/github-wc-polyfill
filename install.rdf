@@ -9,6 +9,8 @@
     <em:name>GitHub/GitLab Web Components Polyfill</em:name>
     <em:description>Ensures that all GitHub and GitLab scripts required for UXP and SeaMonkey are loaded correctly</em:description>
     <em:creator>Off JustOff &lt;Off.Just.Off@gmail.com&gt;</em:creator>
+    <em:contributor>SeaHOH &lt;SeaHOH@gmail.com&gt;</em:contributor>
+    <em:contributor>misteuk</em:contributor>
     <em:homepageURL>https://github.com/JustOff/github-wc-polyfill/</em:homepageURL>
     <em:updateURL>https://raw.githubusercontent.com/JustOff/github-wc-polyfill/master/update.xml</em:updateURL>
     <em:targetApplication>
@@ -22,7 +24,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>52.9.2020.10.05</em:minVersion>
-        <em:maxVersion>52.9.2021.*</em:maxVersion>
+        <em:maxVersion>52.9.2022.*</em:maxVersion>
       </Description>
     </em:targetApplication>
     <em:targetApplication>
