@@ -188,12 +188,6 @@ const pfFollowUp = `(function () {
              node.constructor.name === "ShadowRoot";
     }
   }
-  // Remove "disabled" attribute of "Load diff" buttons
-  if (/^\\/.+?\\/.+?\\/(commit\\/|pull\\/\\d+\\/files)/.test(location.pathname))
-    document.addEventListener("DOMContentLoaded", function () {
-      for (let button of document.getElementsByClassName("load-diff-button"))
-        button.removeAttribute("disabled");
-    }, {once: true});
   if (window.ShadowRoot === undefined) {
     ShadowRoot = class ShadowRoot extends DocumentFragment {
       set innerHTML (html) {
@@ -279,8 +273,14 @@ const pfFollowUp = `(function () {
       oldCED.call(customElements, name, cls);
     };
   }
+  // Remove "disabled" attribute of "Load diff" buttons
+  if (/^\\/.+?\\/.+?\\/(commit\\/|pull\\/\\d+\\/(commits\\/|files))/.test(location.pathname))
+    document.addEventListener("DOMContentLoaded", function () {
+      for (let button of document.getElementsByClassName("load-diff-button"))
+        button.removeAttribute("disabled");
+    }, {once: true});
 }());`;
-const hashFollowUp = "'sha256-4spz5Bj44n1pX/RtKF5P+GTlJvZp6sYPqVNDzrqdpJg='";
+const hashFollowUp = "'sha256-sByi/A21oqNGPE00oZdNzS7MH/Axu2zHWHZK1pJ908Y='";
 const customElements = `(function(){var n=window.Document.prototype.createElement,p=window.Document.prototype.createElementNS,aa=window.Document.prototype.importNode,ba=window.Document.prototype.prepend,ca=window.Document.prototype.append,da=window.DocumentFragment.prototype.prepend,ea=window.DocumentFragment.prototype.append,q=window.Node.prototype.cloneNode,r=window.Node.prototype.appendChild,t=window.Node.prototype.insertBefore,u=window.Node.prototype.removeChild,v=window.Node.prototype.replaceChild,w=Object.getOwnPropertyDescriptor(window.Node.prototype,
 "textContent"),y=window.Element.prototype.attachShadow,z=Object.getOwnPropertyDescriptor(window.Element.prototype,"innerHTML"),A=window.Element.prototype.getAttribute,B=window.Element.prototype.setAttribute,C=window.Element.prototype.removeAttribute,D=window.Element.prototype.getAttributeNS,E=window.Element.prototype.setAttributeNS,F=window.Element.prototype.removeAttributeNS,G=window.Element.prototype.insertAdjacentElement,H=window.Element.prototype.insertAdjacentHTML,fa=window.Element.prototype.prepend,
 ha=window.Element.prototype.append,ia=window.Element.prototype.before,ja=window.Element.prototype.after,ka=window.Element.prototype.replaceWith,la=window.Element.prototype.remove,ma=window.HTMLElement,I=Object.getOwnPropertyDescriptor(window.HTMLElement.prototype,"innerHTML"),na=window.HTMLElement.prototype.insertAdjacentElement,oa=window.HTMLElement.prototype.insertAdjacentHTML;var pa=new Set;"annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" ").forEach(function(a){return pa.add(a)});function qa(a){var b=pa.has(a);a=/^[a-z][.0-9_a-z]*-[-.0-9_a-z]*$/.test(a);return!b&&a}var ra=document.contains?document.contains.bind(document):document.documentElement.contains.bind(document.documentElement);
@@ -329,7 +329,7 @@ var httpObserver = {
   observe: function (subject, topic, data) {
     if ((topic == "http-on-examine-response" || topic == "http-on-examine-cached-response") &&
         subject instanceof Ci.nsIHttpChannel && githost.test(subject.URI.host) &&
-        (subject.responseStatus == 200 || subject.responseStatus == 304)) {
+        [200, 304, 404].includes(subject.responseStatus)) {
       try {
         if (subject.URI.host === "camo.githubusercontent.com") {
           if (subject.getResponseHeader("Content-Type").indexOf("image/svg") != -1) {
@@ -337,7 +337,7 @@ var httpObserver = {
             csp += " 'self'; style-src 'unsafe-inline'";
             subject.setResponseHeader("Content-Security-Policy", csp, false);
           }
-        } else if (subject.responseStatus == 200 &&
+        } else if ([200, 404].includes(subject.responseStatus) &&
             (subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_DOCUMENT ||
              subject.loadInfo.externalContentPolicyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT) &&
             subject.getResponseHeader("Content-Type").indexOf("text/html") != -1) {
@@ -364,6 +364,8 @@ var httpObserver = {
             newListener.site = "github";
           }
           newListener.originalListener = subject.setNewListener(newListener);
+        } else if (subject.responseStatus == 404) {
+          // pass
         } else if (gitlab.test(subject.URI.host) && gitlabjs.test(subject.URI.path)) {
           subject.QueryInterface(Ci.nsITraceableChannel);
           let newListener = new tracingListener();
