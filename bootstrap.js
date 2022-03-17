@@ -459,7 +459,8 @@ tracingListener.prototype = {
         // Test URL: https://gitlab.com/ykweyer-test-group/emoji-test
         data = data.replace("\\p{Emoji}", "[\\u{1f300}-\\u{1f5ff}\\u{1f900}-\\u{1f9ff}\\u{1f600}-\\u{1f64f}\\u{1f680}-\\u{1f6ff}\\u{2600}-\\u{26ff}\\u{2700}-\\u{27bf}\\u{1f1e6}-\\u{1f1ff}\\u{1f191}-\\u{1f251}\\u{1f004}\\u{1f0cf}\\u{1f170}-\\u{1f171}\\u{1f17e}-\\u{1f17f}\\u{1f18e}\\u{3030}\\u{2b50}\\u{2b55}\\u{2934}-\\u{2935}\\u{2b05}-\\u{2b07}\\u{2b1b}-\\u{2b1c}\\u{3297}\\u{3299}\\u{303d}\\u{00a9}\\u{00ae}\\u{2122}\\u{23f3}\\u{24c2}\\u{23e9}-\\u{23ef}\\u{25b6}\\u{23f8}-\\u{23fa}]");
         // https://gitlab.com/gitlab-org/gitlab/-/merge_requests/79161
-        data = data.replace("/^(?<indent>\\s*)(?<leader>((?<isOl>[*+-])|(?<isUl>\\d+\\.))( \\[([x ])\\])?\\s)(?<content>.)?/", "/^(\\s*)(([*+-]|\\d+\\.)( \\[[x ]\\])?\\s)(.)?/").replace(/\{indent:(.),content:(.),leader:(.)\}=(.)\.groups;/, "[$1,$2,$3]=[$4[1],$4[5],$4[2]];");
+        // https://gitlab.com/gitlab-org/gitlab/-/commit/87a9ae81bbedd12029edc1f2adcbb4f97e6aaedc
+        data = data.replace("/^(?<indent>\\s*)(?<leader>((?<isUl>[*+-])|(?<isOl>\\d+\\.))( \\[([x ])\\])?\\s)(?<content>.)?/", "/^(\\s*)(([*+-]|(\\d+\\.))( \\[[x ]\\])?\\s)(.)?/").replace(/\{leader:.,indent:.,content:.,isOl:.\}=(.)\.groups(?=;)/, "$&={indent:$1[1],leader:$1[2],isOl:$1[4],content:$1[6]}").replace(/(\{indent:.,isOl:.\}=).+?(.)\.groups.+?(?=:\{\},)/, "$1$2?{indent:$2[1],isOl:$2[4]}");
       }
     } catch (e) {}
     let storageStream = Cc["@mozilla.org/storagestream;1"].createInstance(Ci["nsIStorageStream"]);
