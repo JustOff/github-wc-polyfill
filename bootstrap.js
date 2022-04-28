@@ -186,7 +186,7 @@ if(!('any' in Promise && typeof Promise.any == 'function'))
   }
 Object.defineProperty(HTMLElement.prototype, "hidden", {
   get: function () {
-    return this.getAttribute("hidden") === "hidden";
+    return this.hasAttribute("hidden");
   },
   set: function (h) {
     if (h)
@@ -195,7 +195,7 @@ Object.defineProperty(HTMLElement.prototype, "hidden", {
       this.removeAttribute("hidden");
   }
 });`;
-const hashBase = "'sha256-pOEaVVaEK6o32UQn317IBBwB7SAN3UAVryFcaB2EeXY='";
+const hashBase = "'sha256-S9vfb/mkBgBhAVBKLx3DRI8SDDSFSK6gcLJptX8RqDE='";
 const pfFollowUp = `(function () {
   // Ensure config dom.getRootNode.enabled is "false", or it would not work correctly
   if (Node.prototype.getRootNode === undefined) {
