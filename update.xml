@@ -10,7 +10,7 @@
               <RDF:Description>
                 <em:id>{8de7fcbb-c55c-4fbe-bfc5-fc555c87dbc4}</em:id>
                 <em:minVersion>28.14.0</em:minVersion>
-                <em:maxVersion>29.*</em:maxVersion>
+                <em:maxVersion>31.*</em:maxVersion>
                 <em:updateLink>https://github.com/JustOff/github-wc-polyfill/releases/download/1.2.19/github-wc-polyfill-1.2.19.xpi</em:updateLink>
               </RDF:Description>
             </em:targetApplication>
